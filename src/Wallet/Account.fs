@@ -256,6 +256,7 @@ let getUnspentOutputs dataAccess session view confirmations =
     let account = DataAccess.Account.get dataAccess session
 
     View.Outputs.getAll view dataAccess session
+    |> List.filter (fun output -> match output.status with | Unspent _-> true | _ -> false)
     |> List.filter (filterOutputByConfirmations account confirmations)
     |> List.map (fun output -> output.outpoint,{lock=output.lock;spend=output.spend})
 
@@ -534,7 +535,8 @@ let getHistory dataAccess session view skip take =
 
 
 let getTransactionCount dataAccess session view =
-    List.length (View.Outputs.getAll view dataAccess session)
+    let account = DataAccess.Account.get dataAccess session
+    List.length (View.Outputs.getAll view dataAccess session |> getOutputsInfo account.blockNumber)
 
 // returns list of pubickeys with their correlating HD paths
 let getKeys dataAccess session password =
