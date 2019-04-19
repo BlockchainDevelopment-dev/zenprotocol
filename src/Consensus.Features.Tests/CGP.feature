@@ -389,3 +389,53 @@ Feature: CGP
     # Interval 0 - Block 2
     When validating an empty block extending tip
     Then CGP amount should be 0 Zen
+
+  Scenario: Zero payout occurs on interval + maturity
+
+    Given chain params
+      | Key                     | Value |
+      | allocationCorrectionCap | 50    |
+      | coinbaseMaturity        | 2     |
+      | interval                | 3     |
+    And genesisTx locks 100 Zen to genesisKey1
+    And genesisTx locks 100 Zen to genesisKey2
+    # Interval 0 - Block 0
+    And genesis has genesisTx
+
+    And voteTx1 has the input genesisTx index 0
+    And voteTx1 votes on allocation of 50 with 100 Zen in interval 0
+    And voteTx1 is signed with genesisKey1
+
+    And voteTx2 has the input genesisTx index 1
+    And voteTx2 votes on payout of 0 for id1 with 100 Zen in interval 1
+    And voteTx2 is signed with genesisKey2
+
+    # Interval 0 - Block 1 (1st vote)
+    When validating block bk1 containing voteTx1 extending tip
+    Then there shouldn't be a payout on block bk1
+
+    # Interval 0 - Block 2
+    When validating an empty block bk2 extending tip
+    Then there shouldn't be a payout on block bk2
+    
+    # Interval 1 - Block 0
+    When validating block bk3 containing voteTx2 extending tip
+    Then there shouldn't be a payout on block bk3
+    
+    # Interval 1 - Block 1
+    When validating an empty block bk4 extending tip
+    Then there shouldn't be a payout on block bk4
+    
+    # Interval 1 - Block 2
+    When validating an empty block bk5 extending tip
+    Then there shouldn't be a payout on block bk5
+
+    # Interval 2 - Block 0
+    When validating an empty block bk6 extending tip
+    Then there shouldn't be a payout on block bk6
+
+    # Interval 2 - Block 1 (Interval + maturity)
+    When validating an empty block bk7 extending tip
+    Then there shouldn't be a payout on block bk7
+    Then tip should be bk7
+    

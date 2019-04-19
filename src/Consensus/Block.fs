@@ -88,17 +88,21 @@ let getBlockSacrificeAmount chain acs =
     Seq.sumBy computeContractSacrifice (ActiveContractSet.getContracts acs)
 
 let private getPayoutOutput = fun (recipient, amount) ->
-    {
-        lock =
-            match recipient with
-            | PKRecipient pkHash -> Lock.PK pkHash
-            | ContractRecipient cId -> Lock.Contract cId
-        spend =
-        {
-            amount = amount
-            asset = Asset.Zen
+    if amount = 0UL then
+        None
+    else
+        Some
+        <| {
+            lock =
+                match recipient with
+                | PKRecipient pkHash -> Lock.PK pkHash
+                | ContractRecipient cId -> Lock.Contract cId
+            spend =
+            {
+                amount = amount
+                asset = Asset.Zen
+            }
         }
-    }
 
 let getBlockCoinbase chain acs blockNumber transactions coinbasePkHash (cgp:CGP.T) =
     // Get the coinbase outputs by summing the fees per asset and adding the block reward
@@ -131,7 +135,7 @@ let getBlockCoinbase chain acs blockNumber transactions coinbasePkHash (cgp:CGP.
     let payoutOutput =
         if CGP.isPayoutBlock chain blockNumber then
             cgp.payout
-            |> Option.map getPayoutOutput
+            |> Option.bind getPayoutOutput
             |> function
                | None   -> []
                | Some x -> [x]
@@ -334,14 +338,21 @@ let connect chainParams getUTXO getTx contractsPath (parent:BlockHeader) timesta
             if CGP.isPayoutBlock chainParams block.header.blockNumber then
                 match cgp.payout with
                 | Some payout ->
-                    if getPayoutOutput payout = List.head coinbase.tx.outputs then
-                        Ok <| List.tail coinbase.tx.outputs
-                    else
+                    match getPayoutOutput payout with
+                    | Some payoutOutput when payoutOutput = List.head coinbase.tx.outputs ->
+                        List.tail coinbase.tx.outputs // continue check with the rest
+                        |> Ok
+                    | None -> 
+                        coinbase.tx.outputs // continue check with all
+                        |> Ok
+                    | _ ->
                         Error "CGP payout mismatch"
                 | None ->
-                        Ok <| coinbase.tx.outputs
+                        coinbase.tx.outputs
+                        |> Ok
             else
-                Ok <| coinbase.tx.outputs
+                coinbase.tx.outputs // continue check with all
+                |> Ok
             |> Result.bind (fun outputs ->
                 let folder totals output =
                     let amount = defaultArg (Map.tryFind output.spend.asset totals) 0UL
