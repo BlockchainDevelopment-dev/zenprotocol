@@ -54,11 +54,11 @@ let testParameters =
         maxBlockWeight=1000_000_000I;
         sacrificePerByteBlock=1UL;
         genesisHashHash =
-            Hash.fromString "5488069e4be0551a3c886543845c332633731c536853209c2dbe04c035946490"
+            Hash.fromString "d6c5468e256f3c2bce289c6cdf0fc3e433332ebb87a9898111f73189efb987bf"
             |> get
             |> Hash.computeOfHash
-        genesisTime=1535968146719UL
-        networkId=2016ul
+        genesisTime=1555680785233UL
+        networkId=2020ul
         contractSacrificePerBytePerBlock=ContractSacrificePerBytePerBlock
         versionExpiry= new System.DateTime(2200,1,1,0,0,0,System.DateTimeKind.Utc) |> Infrastructure.Timestamp.fromDateTime
         intervalLength=100ul
