@@ -25,6 +25,7 @@ type ChainParameters =
         coinbaseMaturity:uint32
         intervalLength:uint32
         allocationCorrectionCap:byte
+        nextInhibitionBlockNumber:uint32
     }
 
 let mainParameters =
@@ -43,6 +44,7 @@ let mainParameters =
         intervalLength=10000ul
         allocationCorrectionCap=50uy
         coinbaseMaturity=100ul
+        nextInhibitionBlockNumber=100000000ul
     }
 
 let testParameters =
@@ -64,6 +66,7 @@ let testParameters =
         intervalLength=100ul
         allocationCorrectionCap=5uy
         coinbaseMaturity=10ul
+        nextInhibitionBlockNumber=0ul
     }
 
 let localGenesisHash = Hash.fromString "6d678ab961c8b47046da8d19c0de5be07eb0fe1e1e82ad9a5b32145b5d4811c7" |> get

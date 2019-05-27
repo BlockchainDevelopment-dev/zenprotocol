@@ -415,9 +415,17 @@ let validateCoinbase chain blockNumber =
     >=> checkNoContract
     >=> checkOutputsOverflow
 
+let private checkInhibition (tx:Transaction) chainParams blockNumber =
+    if tx.version > Version0 && blockNumber < chainParams.nextInhibitionBlockNumber then
+        GeneralError "hard-fork is not active yet"
+    else
+        Ok ()
+
 let validateInContext chainParams getUTXO contractPath blockNumber timestamp acs contractCache set getContractState contractState ex = result {
     let! outputs = tryGetUtxos getUTXO set ex.tx
     let txSkel = TxSkeleton.fromTransaction ex.tx outputs
+
+    do! checkInhibition ex.tx chainParams blockNumber
 
     do! checkInputsVersion txSkel
     do! checkWeight chainParams ex.tx txSkel
