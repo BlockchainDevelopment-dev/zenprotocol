@@ -60,6 +60,13 @@ let private findLongerChains session extendedHeader minChainWork =
     findLongerChains' extendedHeader [] id
     |> List.sortByDescending ExtendedBlockHeader.chainWork
 
+let private getStats session block =
+    let getParent header =
+        BlockRepository.tryGetHeader session header.parent
+        |> Option.map (fun header -> header.header)
+        
+    BlockVersionStats.calc getParent block.header
+
 // Connect the entire chain, returning the valid tip along with state
 let private connectChain chainParams contractPath timestamp session (origin:ExtendedBlockHeader.T) originState (tip:ExtendedBlockHeader.T) getContractState =
     let rec getHeaders (header:ExtendedBlockHeader.T) headers =
@@ -83,7 +90,9 @@ let private connectChain chainParams contractPath timestamp session (origin:Exte
         else
             let block = BlockRepository.getFullBlock session tip
 
-            match Block.connect chainParams (getUTXO session) (getTx session) contractPath validTip.header timestamp utxoSet cgp acs contractCache ema (getContractState session) contractStates block with
+            let getBlockStats() = getStats session block
+
+            match Block.connect chainParams (getUTXO session) (getTx session) contractPath validTip.header timestamp utxoSet cgp acs contractCache ema (getContractState session) contractStates getBlockStats block with
             | Error error ->
                 BlockRepository.saveHeader session (ExtendedBlockHeader.invalid tip)
 
@@ -303,8 +312,10 @@ let private rollForwardChain chainParams contractPath timestamp state session bl
 
 let private handleGenesisBlock chainParams contractPath session timestamp (state:State) blockHash block =
     effectsWriter {
+        let getBlockStats() = getStats session block
+        
         match Block.connect chainParams (getUTXO session) (getTx session) contractPath Block.genesisParent timestamp UtxoSet.asDatabase CGP.empty
-                ActiveContractSet.empty state.memoryState.contractCache (EMA.create chainParams) (getContractState session) ContractStates.asDatabase block with
+                ActiveContractSet.empty state.memoryState.contractCache (EMA.create chainParams) (getContractState session) ContractStates.asDatabase getBlockStats block with
         | Error error ->
             eventX "Failed connecting genesis block {hash} due to {error}"
             >> setField "hash" (block.header |> Block.hash |> Hash.toString)
@@ -350,8 +361,10 @@ let private handleGenesisBlock chainParams contractPath session timestamp (state
 // So we also have to unorphan any chain and find longest chain
 let private handleMainChain chain contractPath session timestamp (state:State) (parent:ExtendedBlockHeader.T) blockHash block =
     effectsWriter {
+        let getBlockStats() = getStats session block
+        
         match Block.connect chain (getUTXO session) (getTx session) contractPath parent.header timestamp UtxoSet.asDatabase state.tipState.cgp
-                state.tipState.activeContractSet state.memoryState.contractCache state.tipState.ema (getContractState session) ContractStates.asDatabase block with
+                state.tipState.activeContractSet state.memoryState.contractCache state.tipState.ema (getContractState session) ContractStates.asDatabase getBlockStats block with
         | Error error ->
             eventX "Failed connecting block #{blockNumber} {hash} due to {error}"
             >> setField "blockNumber" block.header.blockNumber

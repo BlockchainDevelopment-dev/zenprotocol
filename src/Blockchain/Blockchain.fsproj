@@ -44,6 +44,7 @@
   <ItemGroup>
     <Compile Include="AssemblyInfo.fs" />
     <Compile Include="BlockState.fs" />
+    <Compile Include="BlockVersionStats.fs" />
     <Compile Include="ExtendedBlockHeader.fs" />
     <Compile Include="Serialization.fs" />
     <Compile Include="DatabaseContext.fs" />

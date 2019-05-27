@@ -270,7 +270,7 @@ let validate chain =
                 Error "commitments mismatch"
         else
             Error "commitments mismatch"
-
+            
     checkTxNotEmpty
     >=> checkHeader
     >=> checkCoinbase
@@ -278,7 +278,10 @@ let validate chain =
     >=> checkCommitments
 
 /// Apply block to UTXO, ACS and CGP; operation can fail
-let connect chainParams getUTXO getTx contractsPath (parent:BlockHeader) timestamp utxoSet (cgp:CGP.T) acs contractCache ema getContractState contractStates =
+let connect chainParams getUTXO getTx contractsPath
+            (parent:BlockHeader) timestamp utxoSet (cgp:CGP.T)
+            acs contractCache ema getContractState
+            contractStates getStats =
     let checkBlockNumber (block:Block) =
         if parent.blockNumber + 1ul <> block.header.blockNumber then
             Error "blockNumber mismatch"
@@ -327,8 +330,6 @@ let connect chainParams getUTXO getTx contractsPath (parent:BlockHeader) timesta
                 let set = UtxoSet.handleTransaction getUTXO ex.txHash ex.tx set
                 return block,set,acs,cgp,ema,contractCache,contractStates
             }) (Ok (block,set,acs,cgp,ema,contractCache,contractStates)) withoutCoinbase
-            
-            
 
     let checkCoinbase (block,set,acs,(cgp:CGP.T),ema,contractCache,contractStates) =
         if isGenesis chainParams block then
@@ -403,9 +404,37 @@ let connect chainParams getUTXO getTx contractsPath (parent:BlockHeader) timesta
             return! Error "block weight exceeds maximum"
     }
 
+    let checkStats (block:Block) =
+        if not <| CGP.isEmpty cgp then
+           Ok block
+        elif List.forall (fun ex -> ex.tx.version = Version0) block.transactions then
+           Ok block
+        else
+            getStats()
+            |> Option.map (fun stats ->
+                match
+                    stats
+                    |> Map.toSeq
+                    |> Seq.map snd
+                    |> Seq.fold (+) 0ul with
+                | 0ul -> 0ul
+                | tot ->
+                    (stats
+                     |> Map.tryFind Version1
+                     |> Option.defaultValue 0ul
+                     |> ((*) 100ul)) / tot)
+            |> Option.map (fun percentage ->
+                if byte percentage < chainParams.nextInhibitionPercentage then 
+                    Error "non sufficient V1 blocks on-chain signaling"
+                else
+                    Ok block)
+            |> Option.defaultValue (Error "no sufficient V1 blocks on-chain stats")
+
     checkBlockNumber
+    >=> checkStats
     >=> checkDifficulty
     >=> checkWeight
     >=> checkTxInputs
     >=> checkCoinbase
     >=> checkCommitments
+

@@ -26,6 +26,7 @@ type ChainParameters =
         intervalLength:uint32
         allocationCorrectionCap:byte
         nextInhibitionBlockNumber:uint32
+        nextInhibitionPercentage:byte
     }
 
 let mainParameters =
@@ -45,6 +46,7 @@ let mainParameters =
         allocationCorrectionCap=50uy
         coinbaseMaturity=100ul
         nextInhibitionBlockNumber=100000000ul
+        nextInhibitionPercentage=80uy
     }
 
 let testParameters =
@@ -67,6 +69,7 @@ let testParameters =
         allocationCorrectionCap=5uy
         coinbaseMaturity=10ul
         nextInhibitionBlockNumber=0ul
+        nextInhibitionPercentage=0uy
     }
 
 let localGenesisHash = Hash.fromString "6d678ab961c8b47046da8d19c0de5be07eb0fe1e1e82ad9a5b32145b5d4811c7" |> get
@@ -97,7 +100,7 @@ let private initialBlockReward = 50UL * 100_000_000UL
 
 let blockReward blockNumber (allocationPortion : byte) =
     let allocation = 100UL - uint64 allocationPortion
-    
+
     let initial = (initialBlockReward * allocation) / 100UL
     initial >>> getPeriod blockNumber
 
