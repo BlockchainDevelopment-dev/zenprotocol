@@ -69,7 +69,7 @@ let testParameters =
         allocationCorrectionCap=5uy
         coinbaseMaturity=10ul
         nextInhibitionBlockNumber=0ul
-        nextInhibitionPercentage=0uy
+        nextInhibitionPercentage=80uy
     }
 
 let localGenesisHash = Hash.fromString "6d678ab961c8b47046da8d19c0de5be07eb0fe1e1e82ad9a5b32145b5d4811c7" |> get
