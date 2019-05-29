@@ -3,10 +3,12 @@ Feature: CGP Blockchain
   Scenario: Connecting longest chain available after an orphan is found
 
     Given chain params
-      | Key                     | Value |
-      | allocationCorrectionCap | 50    |
-      | coinbaseMaturity        | 2     |
-      | interval                | 3     |
+      | Key                      | Value |
+      | allocationCorrectionCap  | 50    |
+      | coinbaseMaturity         | 2     |
+      | interval                 | 3     |
+      | nextInhibitionPercentage | 0     |
+    
     And genesisTx locks 100 Zen to genesisKey1alloc
     And genesisTx locks 100 Zen to genesisKey1payout
     And genesisTx locks 100 Zen to genesisKey2alloc
@@ -191,10 +193,12 @@ Feature: CGP Blockchain
   Scenario: Reorg gives expected outcome
 
     Given chain params
-      | Key                     | Value |
-      | allocationCorrectionCap | 50    |
-      | coinbaseMaturity        | 2     |
-      | interval                | 3     |
+      | Key                      | Value |
+      | allocationCorrectionCap  | 50    |
+      | coinbaseMaturity         | 2     |
+      | interval                 | 3     |
+      | nextInhibitionPercentage | 0     |
+    
     And genesisTx locks 100 Zen to genesisKey1alloc
     And genesisTx locks 100 Zen to genesisKey1payout
     And genesisTx locks 100 Zen to genesisKey2alloc
@@ -368,6 +372,9 @@ Feature: CGP Blockchain
 
 
   Scenario: Reorg removes all votes (first interval)
+    Given chain params
+      | Key                      | Value |
+      | nextInhibitionPercentage | 0     |
 
     Given genesisTx locks 100 Zen to genesisKey1alloc
     # Block 0
@@ -459,10 +466,12 @@ Feature: CGP Blockchain
   Scenario: Reorg removes all votes (through intervals)
 
     Given chain params
-      | Key                     | Value |
-      | allocationCorrectionCap | 50    |
-      | coinbaseMaturity        | 2     |
-      | interval                | 3     |
+      | Key                      | Value |
+      | allocationCorrectionCap  | 50    |
+      | coinbaseMaturity         | 2     |
+      | interval                 | 3     |
+      | nextInhibitionPercentage | 0     |
+    
     And genesisTx locks 100 Zen to genesisKey1alloc
     And genesisTx locks 100 Zen to genesisKey1payout
     And genesisTx locks 100 Zen to genesisKey2alloc

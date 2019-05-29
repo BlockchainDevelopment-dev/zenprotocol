@@ -3,10 +3,12 @@ Feature: CGP
   Scenario: resetting
 
     Given chain params
-      | Key                     | Value |
-      | coinbaseMaturity        | 2     |
-      | allocationCorrectionCap | 50    |
-      | interval                | 3     |
+      | Key                      | Value |
+      | coinbaseMaturity         | 2     |
+      | allocationCorrectionCap  | 50    |
+      | interval                 | 3     |
+      | nextInhibitionPercentage | 0     |
+    
     And genesisTx locks 100 Zen to genesisKey1
     And genesisTx locks 100 Zen to genesisKey2
     # Interval 0 - Block 0
@@ -69,10 +71,12 @@ Feature: CGP
   Scenario: payout occurs on interval + maturity
 
     Given chain params
-      | Key                     | Value |
-      | allocationCorrectionCap | 50    |
-      | coinbaseMaturity        | 2     |
-      | interval                | 3     |
+      | Key                      | Value |
+      | allocationCorrectionCap  | 50    |
+      | coinbaseMaturity         | 2     |
+      | interval                 | 3     |
+      | nextInhibitionPercentage | 0     |
+    
     And genesisTx locks 100 Zen to genesisKey1
     And genesisTx locks 100 Zen to genesisKey2
     # Interval 0 - Block 0
@@ -118,10 +122,12 @@ Feature: CGP
   Scenario: sum and address are right
 
     Given chain params
-      | Key                     | Value |
-      | allocationCorrectionCap | 50    |
-      | coinbaseMaturity        | 2     |
-      | interval                | 3     |
+      | Key                      | Value |
+      | allocationCorrectionCap  | 50    |
+      | coinbaseMaturity         | 2     |
+      | interval                 | 3     |
+      | nextInhibitionPercentage | 0     |
+
     And genesisTx locks 100 Zen to genesisKey1
     And genesisTx locks 100 Zen to genesisKey2
     # Interval 0 - Block 0
@@ -162,10 +168,12 @@ Feature: CGP
   Scenario: funds are deducted of, using payout as amount
 
     Given chain params
-      | Key                     | Value |
-      | allocationCorrectionCap | 50    |
-      | coinbaseMaturity        | 2     |
-      | interval                | 3     |
+      | Key                      | Value |
+      | allocationCorrectionCap  | 50    |
+      | coinbaseMaturity         | 2     |
+      | interval                 | 3     |
+      | nextInhibitionPercentage | 0     |
+
     And genesisTx locks 100 Zen to genesisKey1
     And genesisTx locks 100 Zen to genesisKey2
     # Interval 0 - Block 0
@@ -225,10 +233,12 @@ Feature: CGP
   Scenario: insufficient funds
     
     Given chain params
-      | Key                     | Value |
-      | allocationCorrectionCap | 50    |
-      | coinbaseMaturity        | 2     |
-      | interval                | 3     |
+      | Key                      | Value |
+      | allocationCorrectionCap  | 50    |
+      | coinbaseMaturity         | 2     |
+      | interval                 | 3     |
+      | nextInhibitionPercentage | 0     |
+
     And genesisTx locks 200 Zen to genesisKey1
     # Interval 0 - Block 0
     And genesis has genesisTx
@@ -278,10 +288,12 @@ Feature: CGP
   Scenario: if funds are avail and payout votes are avail - expect payout output
 
     Given chain params
-      | Key                     | Value |
-      | allocationCorrectionCap | 50    |
-      | coinbaseMaturity        | 2     |
-      | interval                | 3     |
+      | Key                      | Value |
+      | allocationCorrectionCap  | 50    |
+      | coinbaseMaturity         | 2     |
+      | interval                 | 3     |
+      | nextInhibitionPercentage | 0     |
+    
     And genesisTx locks 100 Zen to genesisKey1
     And genesisTx locks 100 Zen to genesisKey2
     # Interval 0 - Block 0
@@ -369,10 +381,12 @@ Feature: CGP
   Scenario: Fund should be empty in the first interval
 
     Given chain params
-      | Key                     | Value |
-      | allocationCorrectionCap | 50    |
-      | coinbaseMaturity        | 2     |
-      | interval                | 3     |
+      | Key                      | Value |
+      | allocationCorrectionCap  | 50    |
+      | coinbaseMaturity         | 2     |
+      | interval                 | 3     |
+      | nextInhibitionPercentage | 0     |
+
     And genesisTx locks 200 Zen to genesisKey1
     # Interval 0 - Block 0
     And genesis has genesisTx

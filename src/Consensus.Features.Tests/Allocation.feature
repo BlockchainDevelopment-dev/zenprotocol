@@ -4,9 +4,11 @@ Feature: Allocation
   Scenario: Capping (increase and decrease)
 
     Given chain params
-      | Key                     | Value |
-      | allocationCorrectionCap | 10    |
-      | interval                | 3     |
+      | Key                      | Value |
+      | allocationCorrectionCap  | 10    |
+      | interval                 | 3     |
+      | nextInhibitionPercentage | 0     |
+
     And genesisTx locks 100 Zen to genesisKey1
     # Interval 0 - Block 0
     And genesis has genesisTx
@@ -106,9 +108,11 @@ Feature: Allocation
 
   Scenario: Coinbase is calculated correctly
     Given chain params
-      | Key                     | Value |
-      | allocationCorrectionCap | 50    |
-      | interval                | 3     |
+      | Key                      | Value |
+      | allocationCorrectionCap  | 50    |
+      | interval                 | 3     |
+      | nextInhibitionPercentage | 0     |
+
     And genesisTx locks 100 Zen to genesisKey1
     # Interval 0 - Block 0
     And genesis has genesisTx
@@ -158,9 +162,11 @@ Feature: Allocation
 
   Scenario: Allocation should stay the same when no allocation votes are given
     Given chain params
-      | Key                     | Value |
-      | allocationCorrectionCap | 10    |
-      | interval                | 3     |
+      | Key                      | Value |
+      | allocationCorrectionCap  | 10    |
+      | interval                 | 3     |
+      | nextInhibitionPercentage | 0     |
+
     And genesisTx locks 100 Zen to genesisKey1
     # Interval 0 - Block 0
     And genesis has genesisTx
@@ -256,9 +262,11 @@ Feature: Allocation
 
   Scenario: Allocation should converge to 0% given 0% allocation votes (with capped steps)
     Given chain params
-      | Key                     | Value |
-      | allocationCorrectionCap | 10    |
-      | interval                | 3     |
+      | Key                      | Value |
+      | allocationCorrectionCap  | 10    |
+      | interval                 | 3     |
+      | nextInhibitionPercentage | 0     |
+
     And genesisTx locks 100 Zen to genesisKey1
     # Interval 0 - Block 0
     And genesis has genesisTx
@@ -399,9 +407,11 @@ Feature: Allocation
   Scenario: Allocation should reach 99% given allocation votes of 99% (with capped steps)
     
     Given chain params
-      | Key                     | Value |
-      | allocationCorrectionCap | 25    |
-      | interval                | 3     |
+      | Key                      | Value |
+      | allocationCorrectionCap  | 25    |
+      | interval                 | 3     |
+      | nextInhibitionPercentage | 0     |
+    
     And genesisTx locks 100 Zen to genesisKey1
     # Interval 0 - Block 0
     And genesis has genesisTx

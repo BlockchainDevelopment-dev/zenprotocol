@@ -7,8 +7,9 @@ Feature: Tally
   Scenario: Resetting
 
     Given chain params
-      | Key      | Value |
-      | interval | 3     |
+      | Key                      | Value |
+      | interval                 | 3     |
+      | nextInhibitionPercentage | 0     |
 
     Given genesisTx locks 200 Zen to genesisKey1
     # Interval 0 - Block 0
@@ -38,9 +39,10 @@ Feature: Tally
   Scenario: Unvoting in new interval
 
     Given chain params
-      | Key                     | Value |
-      | allocationCorrectionCap | 50    |
-      | interval                | 4     |
+      | Key                      | Value |
+      | allocationCorrectionCap  | 50    |
+      | interval                 | 4     |
+      | nextInhibitionPercentage | 0     |
 
     # Interval 1 - Block 0
     Given genesisTx locks 100 Zen to genesisKey1
@@ -110,6 +112,10 @@ Feature: Tally
 
   Scenario: Double voting in same block
 
+    Given chain params
+      | Key                      | Value |
+      | nextInhibitionPercentage | 0     |
+
     Given genesisTx locks 100 Zen to genesisKey1
     And genesis has genesisTx
 
@@ -131,6 +137,10 @@ Feature: Tally
 
 
   Scenario: Double voting in new block
+
+    Given chain params
+      | Key                      | Value |
+      | nextInhibitionPercentage | 0     |
 
     Given genesisTx locks 100 Zen to genesisKey1
     And genesis has genesisTx
@@ -156,9 +166,11 @@ Feature: Tally
   Scenario: Double voting in new interval
 
     Given chain params
-      | Key                     | Value |
-      | allocationCorrectionCap | 50    |
-      | interval                | 4     |
+      | Key                      | Value |
+      | allocationCorrectionCap  | 50    |
+      | interval                 | 4     |
+      | nextInhibitionPercentage | 0     |
+
     And genesisTx locks 100 Zen to genesisKey1
     # Interval 0 - Block 0
     And genesis has genesisTx
@@ -222,6 +234,10 @@ Feature: Tally
     
   Scenario: Unvoting in same block
 
+    Given chain params
+      | Key                      | Value |
+      | nextInhibitionPercentage | 0     |
+
     Given genesisTx locks 100 Zen to genesisKey1
     And genesis has genesisTx
 
@@ -238,6 +254,10 @@ Feature: Tally
 
 
   Scenario: Unvoting in new block
+
+    Given chain params
+      | Key                      | Value |
+      | nextInhibitionPercentage | 0     |
 
     Given genesisTx locks 100 Zen to genesisKey1
     And genesis has genesisTx
@@ -261,6 +281,10 @@ Feature: Tally
     
   Scenario: Voting with an amount smaller than inputs
 
+    Given chain params
+      | Key                      | Value |
+      | nextInhibitionPercentage | 0     |
+
     Given genesisTx locks 100 Zen to genesisKey
     And genesis has genesisTx
 
@@ -275,6 +299,10 @@ Feature: Tally
 
 
   Scenario: Voting with an amount smaller than inputs, sending the rest to another voter (same block)
+
+    Given chain params
+      | Key                      | Value |
+      | nextInhibitionPercentage | 0     |
 
     Given genesisTx locks 100 Zen to genesisKey
     And genesis has genesisTx
@@ -294,6 +322,10 @@ Feature: Tally
 
 
   Scenario: Voting with an amount smaller than inputs, sending the rest to another voter (another block)
+
+    Given chain params
+      | Key                      | Value |
+      | nextInhibitionPercentage | 0     |
 
     Given genesisTx locks 100 Zen to genesisKey
     And genesis has genesisTx
@@ -316,6 +348,10 @@ Feature: Tally
 
   Scenario: Voting with an amount greater than inputs
 
+    Given chain params
+      | Key                      | Value |
+      | nextInhibitionPercentage | 0     |
+
     Given genesisTx locks 100 Zen to genesisKey
     And genesis has genesisTx
 
@@ -327,6 +363,10 @@ Feature: Tally
 
 
   Scenario: Voting with version 0 (should not be counted)
+
+    Given chain params
+      | Key                      | Value |
+      | nextInhibitionPercentage | 0     |
 
     Given genesisTx locks 55 Zen to genesisKey1
     Given genesisTx locks 88 Zen to genesisKey2
@@ -355,6 +395,10 @@ Feature: Tally
 
   Scenario: Single vote in a block
 
+    Given chain params
+      | Key                      | Value |
+      | nextInhibitionPercentage | 0     |
+
     Given genesisTx locks 100 Zen to genesisKey1
     And genesis has genesisTx
 
@@ -368,6 +412,10 @@ Feature: Tally
 
 
   Scenario: Two votes in a block, same allocation
+
+    Given chain params
+      | Key                      | Value |
+      | nextInhibitionPercentage | 0     |
 
     Given genesisTx locks 100 Zen to genesisKey1
     And genesisTx locks 100 Zen to genesisKey2
@@ -387,6 +435,10 @@ Feature: Tally
 
 
   Scenario: Two votes in a block, different allocations
+
+    Given chain params
+      | Key                      | Value |
+      | nextInhibitionPercentage | 0     |
 
     Given genesisTx locks 100 Zen to genesisKey1
     And genesisTx locks 100 Zen to genesisKey2
@@ -408,6 +460,10 @@ Feature: Tally
 
 
   Scenario: Should pick max allocation (1)
+
+    Given chain params
+      | Key                      | Value |
+      | nextInhibitionPercentage | 0     |
 
     Given genesisTx locks 100 Zen to genesisKey1
     And genesisTx locks 200 Zen to genesisKey2
@@ -431,6 +487,10 @@ Feature: Tally
 
     
   Scenario: Should pick max allocation (2)
+
+    Given chain params
+      | Key                      | Value |
+      | nextInhibitionPercentage | 0     |
 
     Given genesisTx locks 100 Zen to genesisKey1
     And genesisTx locks 50 Zen to genesisKey2
@@ -465,6 +525,10 @@ Feature: Tally
 
     
   Scenario: Should pick weighted median allocation
+
+    Given chain params
+      | Key                      | Value |
+      | nextInhibitionPercentage | 0     |
 
     Given genesisTx locks 50 Zen to genesisKey1
     And genesisTx locks 50 Zen to genesisKey2
@@ -511,6 +575,10 @@ Feature: Tally
     
 
   Scenario: Should pick max address * amount (1)
+
+    Given chain params
+      | Key                      | Value |
+      | nextInhibitionPercentage | 0     |
 
     Given genesisTx locks 99 Zen to genesisKey1
     And genesisTx locks 50 Zen to genesisKey2
