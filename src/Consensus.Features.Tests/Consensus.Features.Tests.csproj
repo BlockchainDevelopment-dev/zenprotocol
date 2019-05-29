@@ -43,6 +43,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ACS.feature.cs" />
+    <Compile Include="BlockVersioningTests.feature.cs" />
     <Compile Include="CGPBlockchain.feature.cs" />
     <Compile Include="Tally.feature.cs" />
     <Compile Include="Allocation.feature.cs" />
@@ -61,6 +62,7 @@
   <ItemGroup>
     <Content Include="ACS.feature" />
     <Content Include="Allocation.feature" />
+    <Content Include="BlockVersioningTests.feature" />
     <Content Include="CGPBlockchain.feature" />
     <Content Include="CGP.feature" />
     <Content Include="Tally.feature" />

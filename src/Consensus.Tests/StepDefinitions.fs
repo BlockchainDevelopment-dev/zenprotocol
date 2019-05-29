@@ -367,6 +367,8 @@ module Binding =
                 testingState <- { testingState with chain = { testingState.chain with allocationCorrectionCap = Byte.Parse value } }
             | "coinbaseMaturity" ->
                 testingState <- { testingState with chain = { testingState.chain with coinbaseMaturity = UInt32.Parse value } }
+            | "nextInhibitionPercentage" ->
+                testingState <- { testingState with chain = { testingState.chain with nextInhibitionPercentage = Byte.Parse value } }
             | _ ->
                 failwith "unidentified option"
 
@@ -709,7 +711,7 @@ module Binding =
 
         state <- state'
 
-    let extendChain' newBlockLabel txs parentBlockLabel (includeInChain : bool) =
+    let extendChain' newBlockLabel txs parentBlockLabel (includeInChain : bool) version =
         let createBlock state =
 
             let parent =
@@ -758,6 +760,11 @@ module Binding =
                     builderState.cgp
                     (txs' @ forceAddedTxs)
                     Hash.zero
+            
+            let rawblock =
+                match version with
+                | None -> rawblock
+                | Some version -> { rawblock with header = { rawblock.header with version = version } }
 
             let rec addPow bk ctr =
                 if ctr > 20 then failwith "You're testing with a real blockchain difficulty. Try setting the proofOfWorkLimit to the lowest value."
@@ -822,11 +829,11 @@ module Binding =
                 |> split
                 |> List.map findTx 
 
-    let extendChain newBlockLabel txLabels parentBlockLabel =
-        extendChain' newBlockLabel (prepareTxs txLabels) parentBlockLabel true
+    let extendChain newBlockLabel txLabels parentBlockLabel version =
+        extendChain' newBlockLabel (prepareTxs txLabels) parentBlockLabel true version
     
     let createMissing newBlockLabel txLabels parentBlockLabel =
-        extendChain' newBlockLabel (prepareTxs txLabels) parentBlockLabel false
+        extendChain' newBlockLabel (prepareTxs txLabels) parentBlockLabel false None
 
     let generateChain parentBlockLabel newBlockLabel blockLabelPrefix (chainLength : uint32) =
         assert (chainLength > 0ul)
@@ -845,19 +852,31 @@ module Binding =
 
     // Extend a chain
     let [<When>] ``validating a block containing (.*) extending (.*)`` txLabels parentBlockLabel =
-        extendChain None txLabels parentBlockLabel
+        extendChain None txLabels parentBlockLabel None
 
     // Extend a chain (using block label)
     let [<When>] ``validating block (.*) containing (.*) extending (.*)`` newBlockLabel txLabels parentBlockLabel =
-        extendChain (Some newBlockLabel) txLabels parentBlockLabel
+        extendChain (Some newBlockLabel) txLabels parentBlockLabel None
+
+    // Extend a chain (using block label, with version)
+    let [<When>] ``validating a v(.*) block (.*) containing (.*) extending (.*)`` version newBlockLabel txLabels parentBlockLabel =
+        extendChain (Some newBlockLabel) txLabels parentBlockLabel (Some version)
 
     // Extend a chain (using block label, empty block)
     let [<When>] ``validating an empty block (.*) extending (.*)`` newBlockLabel parentBlockLabel =
-        extendChain (Some newBlockLabel) "" parentBlockLabel
+        extendChain (Some newBlockLabel) "" parentBlockLabel None
+
+    // Extend a chain (using block label, empty block, with version)
+    let [<When>] ``validating an empty v(.*) block (.*) extending (.*)`` version newBlockLabel parentBlockLabel  =
+        extendChain (Some newBlockLabel) "" parentBlockLabel (Some version)
 
     // Extend a chain (using no block label, empty block)
     let [<When>] ``validating an empty block extending (.*)`` parentBlockLabel =
-        extendChain None "" parentBlockLabel
+        extendChain None "" parentBlockLabel None
+
+    // Extend a chain (using no block label, empty block, with version)
+    let [<When>] ``validating an empty v(.*) block extending (.*)`` version parentBlockLabel =
+        extendChain None "" parentBlockLabel (Some version)
     
     // Create a missing block (all of its children will be orphans)
     let [<When>] ``validating a detached block containing (.*) extending (.*)`` txLabels parentBlockLabel =
