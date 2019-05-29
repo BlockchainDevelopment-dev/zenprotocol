@@ -760,6 +760,8 @@ module Binding =
                     builderState.cgp
                     (txs' @ forceAddedTxs)
                     Hash.zero
+                    
+            let rawblock = { rawblock with header = { rawblock.header with version = Version0 }}
             
             let rawblock =
                 match version with

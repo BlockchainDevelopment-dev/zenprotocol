@@ -182,7 +182,7 @@ let createTemplate chain (parent:BlockHeader) timestamp (ema:EMA.T) acs (cgp:CGP
 
     let header =
         {
-            version=Version0;
+            version=Version1
             parent=parentHash;
             blockNumber=blockNumber;
             commitments=commitments;
