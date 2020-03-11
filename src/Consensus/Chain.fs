@@ -74,11 +74,11 @@ let testParameters =
         maxBlockWeight=8_000_000_000I;
         sacrificePerByteBlock=1UL;
         genesisHashHash =
-            Hash.fromString "5488069e4be0551a3c886543845c332633731c536853209c2dbe04c035946490"
+            Hash.fromString "a9cf56851e0f6c284e7e284323b621d8dc75a5eed1b616c5938b50d9efa98e09"
             |> get
             |> Hash.computeOfHash
-        genesisTime=1535968146719UL
-        networkId=2016ul
+        genesisTime=1582049217652UL
+        networkId=2024ul
         contractSacrificePerBytePerBlock=ContractSacrificePerBytePerBlock
         versionExpiry= new System.DateTime(2200,1,1,0,0,0,System.DateTimeKind.Utc) |> Infrastructure.Timestamp.fromDateTime
         intervalLength=100ul
@@ -89,8 +89,8 @@ let testParameters =
         cgpContractId=Option.get <| ContractId.fromString "00000000eac6c58bed912ff310df9f6960e8ed5c28aac83b8a98964224bab1e06c779b93"
         votingContractId= Option.get <| ContractId.fromString "00000000e89738718a802a7d217941882efe8e585e20b20901391bc37af25fac2f22c8ab" 
         upperAllocationBound=90uy
-        thresholdFactor=(3UL, 100UL)
-        genesisTotal=1UL
+        thresholdFactor=(3UL, 1000UL)
+        genesisTotal=20_000_000UL * 100_000_000UL
     }
 
 let localGenesisHash = Hash.fromString "6d678ab961c8b47046da8d19c0de5be07eb0fe1e1e82ad9a5b32145b5d4811c7" |> get
