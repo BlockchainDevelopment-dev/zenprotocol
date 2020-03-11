@@ -4,7 +4,7 @@ const path = require('path');
 const appData =
     process.env.APPDATA ||
     (process.platform == 'darwin' ? path.join(process.env.HOME,'Library/Application Support') : path.join(process.env.HOME, '.config'));
-const userData = path.join(appData, 'zen-node');
+const userData = path.join(appData, 'zen-node-yesod');
 
 function start(args, dirname = __dirname) {
   const nodePath = path.join(dirname,'/Release/zen-node.exe');
