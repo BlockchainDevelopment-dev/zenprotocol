@@ -6,12 +6,11 @@ externalIp: null
 listen: true
 bind: "*:29555"
 seeds:
-  - 18.217.45.241:29555
-  - 18.224.187.36:29555
+  - 52.1.83.154:29555
 
 api:
   enabled: true
-  bind: 127.0.0.1:31567
+  bind: 127.0.0.1:21567
 
 miner:
   enabled: false
