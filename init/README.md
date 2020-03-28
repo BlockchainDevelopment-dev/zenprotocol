@@ -5,8 +5,8 @@
 3. Run
 
 ```
-npm config set @zen:registry https://www.myget.org/F/zenprotocol/npm/
-npm install @zen/zen-wallet -g
+npm config set @bdl:registry https://www.myget.org/F/blockchaindevelopment/npm/
+npm install @bdl/zen-wallet -g
 ```
 4. Create new file at `/etc/systemd/system/zenprotocol.service` and copy the content of `zenprotocol.service` to the new file.
 5. Run 

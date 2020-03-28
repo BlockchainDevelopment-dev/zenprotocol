@@ -4,8 +4,8 @@ After=network.target
 
 [Service]
 Type=simple
-WorkingDirectory=/usr/lib/node_modules/@zen/zen-node/Release/
-ExecStart=/usr/bin/mono /usr/lib/node_modules/@zen/zen-node/Release/zen-node.exe --data-path /var/zenprotocol/
+WorkingDirectory=/usr/lib/node_modules/@bdl/zen-node-yesod/Release/
+ExecStart=/usr/bin/mono /usr/lib/node_modules/@bdl/zen-node-yesod/Release/zen-node.exe --data-path /var/zenprotocol/
 Restart=on-failure
 
 [Install]
