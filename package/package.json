@@ -1,7 +1,7 @@
 {
   "author":"Zen Protocol",
-  "name":"@zen/zen-node-yesod",
-  "version":"0.3.2",
+  "name":"@bdl/zen-node-yesod",
+  "version":"1.0.0",
   "main":"index.js",
   "bin": {
     "zen-node":"zen-node.js",

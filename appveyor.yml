@@ -8,7 +8,7 @@ init:
       {
         Update-AppveyorBuild -Version "$($env:APPVEYOR_REPO_TAG_NAME.TrimStart("v"))"
       }
- 
+
 assembly_info:
   patch: true
   file: '**\AssemblyInfo.*'
@@ -28,13 +28,13 @@ cache:
 
 before_build:
   - ps: >-
-      "registry=https://www.myget.org/F/zenprotocol/npm/`r`n//www.myget.org/F/zenprotocol/npm/:_authToken=`$`{MYGET_TOKEN`}" | Out-File (Join-Path $ENV:APPVEYOR_BUILD_FOLDER "package/.npmrc") -Encoding UTF8   
+      "registry=https://www.myget.org/F/blockchaindevelopment/npm/`r`n//www.myget.org/F/blockchaindevelopment/npm/:_authToken=`$`{MYGET_TOKEN`}" | Out-File (Join-Path $ENV:APPVEYOR_BUILD_FOLDER "package/.npmrc") -Encoding UTF8
 build_script:
   - paket.cmd restore
   - msbuild src/zenprotocol.sln /property:Configuration=Release /t:Node
   - cd package
   - md Release
-  - xcopy ..\src\Node\bin\Release Release /E /H 
+  - xcopy ..\src\Node\bin\Release Release /E /H
   - type nul > Release\.npmignore
   - copy ..\src\DataAccess\bin\Release\DataAccess.dll.config Release\DataAccess.dll.config
   - npm version %APPVEYOR_BUILD_VERSION%
@@ -50,7 +50,7 @@ artifacts:
 
 deploy:
   - provider: NuGet
-    server: https://www.myget.org/F/zenprotocol/api/v2/package
+    server: https://www.myget.org/F/blockchaindevelopment/api/v2/package
     api_key:
-      secure: tyLfoWjP8lgJNO8kBD1NQX4twHj/GVSwTUm/GG2yVAM3Ir3F3d7jzFEThgeFE96e
+      secure: /yRA1aktABdOj0gjTEXy7P5oyvD6SZ45EyP39FONzwnSIUNEPa0/MaavZVFajxA3
     skip_symbols: true
